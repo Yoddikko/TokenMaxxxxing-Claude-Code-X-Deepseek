@@ -8,5 +8,4 @@ npm start
 
 we like token we no like money spend
 
-<img width="1254" height="1254" alt="ChatGPT Image May 20, 2026, 04_02_31 PM" src="https://github.com/user-attachments/assets/f92ac8d9-aa73-425b-90bc-fced19588510" />
-
+<img width="500" height="500" alt="ChatGPT Image May 20, 2026, 04_02_31 PM-Photoroom" src="https://github.com/user-attachments/assets/8d9a2be2-986a-4132-a677-5118268314e3" />
