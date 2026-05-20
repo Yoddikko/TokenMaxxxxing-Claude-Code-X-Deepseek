@@ -13,7 +13,7 @@ const PROJECT_DIR_FILE = path.join(CONFIG_DIR, "project-dir");
 
 const BASE_URL = "https://api.deepseek.com/anthropic";
 const FLASH_MODEL = "deepseek-v4-flash";
-const PRO_MODEL = "deepseek-v4-pro[1m]";
+const PRO_MODEL = "deepseek-v4-pro";
 const DEFAULT_SKILLS_DIR = path.join(os.homedir(), ".claude", "skills");
 const DEFAULT_PROJECT_DIR = process.cwd();
 
@@ -31,6 +31,9 @@ const TOKEN_EFFICIENT_CLAUDE_MD = `# Approach
 
 - Prefer installed Claude Code Skills for compact execution-focused work.
 - Use the Caveman skill when the task benefits from terse status updates, minimal framing, and low conversational overhead.
+- Use the Context Compaction skill to call /compact before long multi-step tasks when history is noisy.
+- Use the Plan Mode skill for architecture-first execution on complex work.
+- Use the Dynamic Model Selection skill to map heavy reasoning to Pro and high-volume subprocess work to Flash.
 - Keep responses short unless the user explicitly asks for detail.
 - Do not trade correctness, verification, or safety for brevity.
 `;
@@ -68,6 +71,76 @@ Use this skill when the user wants compact, practical Claude Code output.
 2. List changed files or commands only when useful.
 3. Mention remaining risks or manual checks.
 4. Give one next step at most.
+`
+  },
+  {
+    id: "context-compaction",
+    name: "Context Compaction",
+    description: "A workflow for keeping Claude Code context lean with /compact during long sessions.",
+    folderName: "context-compaction",
+    fileName: "SKILL.md",
+    content: `---
+name: context-compaction
+description: Trigger /compact at practical checkpoints to keep long Claude Code sessions token-efficient.
+---
+
+# Context Compaction Skill
+
+Use this skill in long sessions where context has become noisy.
+
+## Behavior
+
+- Before broad refactors or parallel tasks, run /compact.
+- Keep a minimal summary of current goals and blockers before compaction.
+- Resume with concise state: objective, touched files, and next step.
+- Do not compact in the middle of an unresolved critical edit.
+`
+  },
+  {
+    id: "plan-mode",
+    name: "Plan Mode",
+    description: "A strategy-first execution pattern for complex implementation tasks.",
+    folderName: "plan-mode",
+    fileName: "SKILL.md",
+    content: `---
+name: plan-mode
+description: Use explicit planning before execution for complex tasks with architectural constraints.
+---
+
+# Plan Mode Skill
+
+Use this skill when tasks include multiple phases or non-trivial risk.
+
+## Behavior
+
+- Start with a short numbered plan.
+- Mark dependencies and identify the critical path.
+- Execute one step at a time and update plan state as work progresses.
+- Keep implementation aligned with existing project conventions.
+- End with a concise summary of delivered scope and follow-ups.
+`
+  },
+  {
+    id: "dynamic-model-selection",
+    name: "Dynamic Model Selection",
+    description: "Guidance for mapping DeepSeek Pro/Flash roles in Claude Code token-max workflows.",
+    folderName: "dynamic-model-selection",
+    fileName: "SKILL.md",
+    content: `---
+name: dynamic-model-selection
+description: Map heavy reasoning to DeepSeek Pro and quick subprocess work to DeepSeek Flash.
+---
+
+# Dynamic Model Selection Skill
+
+Use this skill to keep cost and latency balanced in Claude Code.
+
+## Behavior
+
+- Route architecture and complex reasoning to deepseek-v4-pro.
+- Route frequent terminal checks, read-heavy subtasks, and iterative edits to deepseek-v4-flash.
+- Keep the model mapping consistent with environment exports in launch scripts.
+- Prefer Flash for subagents unless quality issues require Pro.
 `
   }
 ];
