@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Claude DeepSeek Switcher</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Desktop app · no localhost</p>
+        <h1>DeepSeek Switcher</h1>
+        <p class="subtitle">A small desktop app that opens Claude Code with DeepSeek Flash, DeepSeek Pro, or normal Claude. When you switch profiles, it tries to close the previous tracked session and opens a new one.</p>
+      </div>
+      <div class="orb" aria-hidden="true"></div>
+    </section>
+
+    <section class="grid">
+      <article class="card status-card">
+        <div class="card-title">
+          <span>Status</span>
+          <button id="refreshBtn" class="ghost">Refresh</button>
+        </div>
+
+        <div class="status-list">
+          <div class="status-row">
+            <span id="claudeDot" class="dot"></span>
+            <div>
+              <strong>Claude Code</strong>
+              <p id="claudeText">Checking...</p>
+            </div>
+          </div>
+
+          <div class="status-row">
+            <span id="keyDot" class="dot"></span>
+            <div>
+              <strong>DeepSeek API key</strong>
+              <p id="keyText">Checking...</p>
+            </div>
+          </div>
+
+          <div class="status-row">
+            <span class="dot neutral"></span>
+            <div>
+              <strong>Saved mode</strong>
+              <p id="modeText">—</p>
+              <p id="sessionText">Session: checking...</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mini">
+          <span id="baseUrl"></span>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-title">
+          <span>API key</span>
+        </div>
+        <label class="label" for="apiKey">DeepSeek API key</label>
+        <div class="input-row">
+          <input id="apiKey" type="password" placeholder="sk-..." autocomplete="off" />
+          <button id="saveKeyBtn">Save</button>
+        </div>
+        <p class="hint">Stored locally in <code>~/.ccds-desktop/deepseek.key</code>.</p>
+      </article>
+    </section>
+
+    <section class="modes">
+      <article class="mode-card flash">
+        <div class="pill">Low cost</div>
+        <h2>DeepSeek Flash</h2>
+        <p>For simple work: bug fixes, small refactors, test loops, repeated edits, and file reading.</p>
+        <ul>
+          <li>Model: <code id="flashModel">deepseek-v4-flash</code></li>
+          <li>Subagent: Flash</li>
+          <li>Effort: medium</li>
+        </ul>
+        <button class="launch" data-mode="flash">Switch / restart on Flash</button>
+      </article>
+
+      <article class="mode-card pro">
+        <div class="pill">Heavy work</div>
+        <h2>DeepSeek Pro</h2>
+        <p>For difficult work: architecture, complex bugs, reviews, and multi-file refactors.</p>
+        <ul>
+          <li>Model: <code id="proModel">deepseek-v4-pro[1m]</code></li>
+          <li>Subagent: Flash</li>
+          <li>Effort: max</li>
+        </ul>
+        <button class="launch" data-mode="pro">Switch / restart on Pro</button>
+      </article>
+
+      <article class="mode-card normal">
+        <div class="pill">Reset</div>
+        <h2>Normal Claude</h2>
+        <p>Turns off DeepSeek routing and opens Claude Code without a custom endpoint.</p>
+        <ul>
+          <li>Unset base URL</li>
+          <li>Unset DeepSeek token</li>
+          <li>Unset custom model</li>
+        </ul>
+        <button class="launch" data-mode="off">Switch / restart without DeepSeek</button>
+      </article>
+    </section>
+
+    <section class="card skills-card">
+      <div class="card-title">
+        <span>Claude Code Skills</span>
+        <span class="legend"><span class="dot mini-dot bad"></span>Not installed <span class="dot mini-dot loading"></span>Installing <span class="dot mini-dot ok"></span>Installed</span>
+      </div>
+
+      <label class="label" for="skillsDir">Skills directory</label>
+      <div class="input-row">
+        <input id="skillsDir" type="text" placeholder="~/.claude/skills" autocomplete="off" />
+        <button id="saveSkillsDirBtn" class="secondary">Save path</button>
+      </div>
+      <p class="hint">The app writes bundled skills into this folder. Change the path if your Claude Code setup uses a different custom skills directory.</p>
+
+      <div id="skillsList" class="skills-list" aria-live="polite"></div>
+    </section>
+
+    <section class="card token-card">
+      <div class="card-title">
+        <span>Token-max project rules</span>
+        <span class="legend"><span id="tokenRulesDot" class="dot mini-dot bad"></span><span id="tokenRulesText">Checking...</span></span>
+      </div>
+
+      <label class="label" for="projectDir">Target project directory</label>
+      <div class="input-row">
+        <input id="projectDir" type="text" placeholder="/path/to/your/project" autocomplete="off" />
+        <button id="saveProjectDirBtn" class="secondary">Save path</button>
+      </div>
+      <p class="hint">Installs the lean <code>CLAUDE.md</code> rules from <code>drona23/claude-token-efficient</code>, plus instructions to use the bundled Skills for compact execution-focused work.</p>
+      <p id="tokenRulesPath" class="path standalone-path"></p>
+      <div class="tool-row compact-actions">
+        <button id="installTokenRulesBtn" class="secondary">Install CLAUDE.md</button>
+        <button id="installTokenMaxBtn">Install full token-max setup</button>
+      </div>
+    </section>
+
+    <section class="card tools">
+      <div class="card-title">
+        <span>Setup and commands</span>
+      </div>
+      <div class="tool-row">
+        <button id="installClaudeBtn" class="secondary">Install Claude Code</button>
+        <button id="copyFlashBtn" class="secondary">Copy Flash command</button>
+        <button id="copyProBtn" class="secondary">Copy Pro command</button>
+        <button id="copyOffBtn" class="secondary">Copy reset command</button>
+        <button id="stopSessionBtn" class="secondary danger">Stop tracked session</button>
+      </div>
+      <pre id="log">Ready.</pre>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

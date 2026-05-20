@@ -1,0 +1,13 @@
+{
+  "name": "claude-deepseek-desktop",
+  "version": "1.1.0",
+  "description": "Desktop UI for switching Claude Code between normal Claude, DeepSeek Flash, and DeepSeek Pro, with built-in Claude Code Skills and token-efficient CLAUDE.md installers.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "electron": "^33.4.11"
+  },
+  "devDependencies": {}
+}
