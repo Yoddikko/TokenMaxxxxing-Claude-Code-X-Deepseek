@@ -1,7 +1,7 @@
 ## Start
 
 ```bash
-cd claude_deepseek_desktop_switch
+cd TokenMaxxxxing-Claude-Code-X-Deepseek
 npm install
 npm start
 ```
